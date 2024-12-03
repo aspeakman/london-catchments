@@ -72,11 +72,9 @@
 
         // Function to load the GeoJSON data
         function loadGeoJSON() {
-            alert('loading');
             fetch('https://environment.data.gov.uk/catchment-planning/ManagementCatchment/3049.geojson')
                 .then(response => response.json())
                 .then(data => {
-                    alert('loaded');
                     geojsonData = data; // Save the data
                     updateGeoJSONDisplay(); // Display based on current selection
                 })
@@ -86,7 +84,7 @@
         // Function to filter and display the GeoJSON based on the selection
         function updateGeoJSONDisplay() {
             var selectedValue = document.getElementById('geojsonSelect').value;
-            alert('all');
+            alert('all'+selectedValue);
             // Clear the existing layer
             geojsonLayer.clearLayers();
 
