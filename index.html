@@ -72,7 +72,8 @@
 
         // Function to load the GeoJSON data
         function loadGeoJSON() {
-            fetch('https://environment.data.gov.uk/catchment-planning/ManagementCatchment/3049.geojson')
+            //fetch('https://environment.data.gov.uk/catchment-planning/ManagementCatchment/3049.geojson')
+            fetch('BeverleyBrook.geojson')
                 .then(response => response.json())
                 .then(data => {
                     geojsonData = data; // Save the data
