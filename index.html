@@ -31,8 +31,9 @@
         <label for="geojsonSelect">Select Feature Type:</label>
         <select id="geojsonSelect">
             <option value="all">All Features</option>
-            <option value="feature1">Rivers</option>
-            <option value="feature2">Feature 2</option>
+            <option value="catchments">Catchments</option>
+            <option value="rivers">Rivers</option>
+            <option value="lakes">Lakes</option>
         </select>
     </div>
 
@@ -70,7 +71,7 @@
 
         // Function to load the GeoJSON data
         function loadGeoJSON() {
-            fetch('your-geojson-file.geojson')
+            fetch('https://environment.data.gov.uk/catchment-planning/ManagementCatchment/3049.geojson')
                 .then(response => response.json())
                 .then(data => {
                     geojsonData = data; // Save the data
