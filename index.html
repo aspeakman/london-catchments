@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Map with GeoJSON Selection</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        /* Make the map fill the page */
+        #map {
+            width: 100%;
+            height: 80vh;
+        }
+
+        #controls {
+            padding: 10px;
+            background-color: white;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dropdown Control for GeoJSON Features -->
+    <div id="controls">
+        <label for="geojsonSelect">Select Feature Type:</label>
+        <select id="geojsonSelect">
+            <option value="all">All Features</option>
+            <option value="feature1">Rivers</option>
+            <option value="feature2">Feature 2</option>
+        </select>
+    </div>
+
+    <!-- Map Container -->
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    
+    <!-- Add your GeoJSON file -->
+    <script src="map.js"></script>
+    
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([51.505, -0.09], 13);
+
+        // Add a tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // A placeholder for GeoJSON data
+        var geojsonData = null;
+        var geojsonLayer = L.geoJSON().addTo(map);
+
+        // Color function to style features based on their properties
+        function styleFeature(feature) {
+            return {
+                color: feature.properties && feature.properties.color || 'blue',
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.4
+            };
+        }
+
+        // Function to load the GeoJSON data
+        function loadGeoJSON() {
+            fetch('your-geojson-file.geojson')
+                .then(response => response.json())
+                .then(data => {
+                    geojsonData = data; // Save the data
+                    updateGeoJSONDisplay(); // Display based on current selection
+                })
+                .catch(error => console.error("Error loading the GeoJSON data: ", error));
+        }
+
+        // Function to filter and display the GeoJSON based on the selection
+        function updateGeoJSONDisplay() {
+            var selectedValue = document.getElementById('geojsonSelect').value;
+
+            // Clear the existing layer
+            geojsonLayer.clearLayers();
+
+            // Filter features based on selection
+            var filteredData;
+            if (selectedValue === 'all') {
+                filteredData = geojsonData;
+            } else {
+                filteredData = {
+                    type: 'FeatureCollection',
+                    features: geojsonData.features.filter(function (feature) {
+                        return feature.properties && feature.properties.type === selectedValue;
+                    })
+                };
+            }
+
+            // Add filtered GeoJSON to the map with styles
+            geojsonLayer.addData(filteredData);
+        }
+
+        // Event listener for the dropdown
+        document.getElementById('geojsonSelect').addEventListener('change', updateGeoJSONDisplay);
+
+        // Load GeoJSON file initially
+        loadGeoJSON();
+    </script>
+</body>
+</html>
